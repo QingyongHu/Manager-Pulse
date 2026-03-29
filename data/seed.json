@@ -6,7 +6,7 @@
     "priority": "高",
     "currentStatus": "待填写",
     "lastUpdateTime": "",
-    "statusLight": "red",
+    "statusLight": "green",
     "archived": false,
     "history": []
   },
@@ -17,7 +17,7 @@
     "priority": "中",
     "currentStatus": "待填写",
     "lastUpdateTime": "",
-    "statusLight": "red",
+    "statusLight": "green",
     "archived": false,
     "history": []
   },
@@ -28,7 +28,7 @@
     "priority": "中",
     "currentStatus": "待填写",
     "lastUpdateTime": "",
-    "statusLight": "red",
+    "statusLight": "green",
     "archived": false,
     "history": []
   },
@@ -39,7 +39,7 @@
     "priority": "低",
     "currentStatus": "待填写",
     "lastUpdateTime": "",
-    "statusLight": "red",
+    "statusLight": "green",
     "archived": false,
     "history": []
   },
@@ -50,7 +50,7 @@
     "priority": "中",
     "currentStatus": "待填写",
     "lastUpdateTime": "",
-    "statusLight": "red",
+    "statusLight": "green",
     "archived": false,
     "history": []
   },
@@ -61,7 +61,7 @@
     "priority": "高",
     "currentStatus": "待填写",
     "lastUpdateTime": "",
-    "statusLight": "red",
+    "statusLight": "green",
     "archived": false,
     "history": []
   },
@@ -72,7 +72,7 @@
     "priority": "高",
     "currentStatus": "待填写",
     "lastUpdateTime": "",
-    "statusLight": "red",
+    "statusLight": "green",
     "archived": false,
     "history": []
   },
@@ -83,7 +83,7 @@
     "priority": "高",
     "currentStatus": "待填写",
     "lastUpdateTime": "",
-    "statusLight": "red",
+    "statusLight": "green",
     "archived": false,
     "history": []
   },
@@ -94,7 +94,7 @@
     "priority": "高",
     "currentStatus": "待填写",
     "lastUpdateTime": "",
-    "statusLight": "red",
+    "statusLight": "green",
     "archived": false,
     "history": []
   },
@@ -105,7 +105,7 @@
     "priority": "高",
     "currentStatus": "待填写",
     "lastUpdateTime": "",
-    "statusLight": "red",
+    "statusLight": "green",
     "archived": false,
     "history": []
   },
@@ -116,7 +116,7 @@
     "priority": "高",
     "currentStatus": "待填写",
     "lastUpdateTime": "",
-    "statusLight": "red",
+    "statusLight": "green",
     "archived": false,
     "history": []
   },
@@ -127,7 +127,7 @@
     "priority": "中",
     "currentStatus": "待填写",
     "lastUpdateTime": "",
-    "statusLight": "red",
+    "statusLight": "green",
     "archived": false,
     "history": []
   },
@@ -138,7 +138,7 @@
     "priority": "中",
     "currentStatus": "待填写",
     "lastUpdateTime": "",
-    "statusLight": "red",
+    "statusLight": "green",
     "archived": false,
     "history": []
   },
@@ -149,7 +149,7 @@
     "priority": "中",
     "currentStatus": "待填写",
     "lastUpdateTime": "",
-    "statusLight": "red",
+    "statusLight": "green",
     "archived": false,
     "history": []
   },
@@ -160,7 +160,7 @@
     "priority": "高",
     "currentStatus": "待填写",
     "lastUpdateTime": "",
-    "statusLight": "red",
+    "statusLight": "green",
     "archived": false,
     "history": []
   },
@@ -171,7 +171,7 @@
     "priority": "中",
     "currentStatus": "待填写",
     "lastUpdateTime": "",
-    "statusLight": "red",
+    "statusLight": "green",
     "archived": false,
     "history": []
   },
@@ -182,7 +182,7 @@
     "priority": "低",
     "currentStatus": "待填写",
     "lastUpdateTime": "",
-    "statusLight": "red",
+    "statusLight": "green",
     "archived": false,
     "history": []
   },
@@ -193,7 +193,7 @@
     "priority": "高",
     "currentStatus": "待填写",
     "lastUpdateTime": "",
-    "statusLight": "red",
+    "statusLight": "green",
     "archived": false,
     "history": []
   },
@@ -204,7 +204,7 @@
     "priority": "高",
     "currentStatus": "待填写",
     "lastUpdateTime": "",
-    "statusLight": "red",
+    "statusLight": "green",
     "archived": false,
     "history": []
   },
@@ -215,7 +215,7 @@
     "priority": "高",
     "currentStatus": "待填写",
     "lastUpdateTime": "",
-    "statusLight": "red",
+    "statusLight": "green",
     "archived": false,
     "history": []
   },
@@ -226,7 +226,7 @@
     "priority": "高",
     "currentStatus": "待填写",
     "lastUpdateTime": "",
-    "statusLight": "red",
+    "statusLight": "green",
     "archived": false,
     "history": []
   },
@@ -237,7 +237,7 @@
     "priority": "高",
     "currentStatus": "待填写",
     "lastUpdateTime": "",
-    "statusLight": "red",
+    "statusLight": "green",
     "archived": false,
     "history": []
   },
@@ -248,7 +248,7 @@
     "priority": "高",
     "currentStatus": "待填写",
     "lastUpdateTime": "",
-    "statusLight": "red",
+    "statusLight": "green",
     "archived": false,
     "history": []
   },
@@ -259,7 +259,7 @@
     "priority": "中",
     "currentStatus": "待填写",
     "lastUpdateTime": "",
-    "statusLight": "red",
+    "statusLight": "green",
     "archived": false,
     "history": []
   },
@@ -270,7 +270,7 @@
     "priority": "低",
     "currentStatus": "待填写",
     "lastUpdateTime": "",
-    "statusLight": "red",
+    "statusLight": "green",
     "archived": false,
     "history": []
   }

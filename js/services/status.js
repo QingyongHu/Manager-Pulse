@@ -4,7 +4,7 @@ export function calculateStatusLight(lastUpdateTime, thresholds = {}) {
   const greenDays = thresholds.green ?? 5
   const yellowDays = thresholds.yellow ?? 10
 
-  if (!lastUpdateTime) return 'red'
+  if (!lastUpdateTime) return 'green'
 
   const days = daysBetween(lastUpdateTime, new Date().toISOString().slice(0, 10))
 
