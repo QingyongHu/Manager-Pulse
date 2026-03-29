@@ -8,6 +8,7 @@ import { QuickUpdateSheet } from './QuickUpdateSheet.js'
 import { WorkStreamForm } from './WorkStreamForm.js'
 import { ConfirmDialog } from './ConfirmDialog.js'
 import { BatchUpdatePanel } from './BatchUpdatePanel.js'
+import { BottomSheet } from './BottomSheet.js'
 
 export const AppShell = {
   setup() {
@@ -25,6 +26,7 @@ export const AppShell = {
     const archiveConfirmVisible = ref(false)
     const archiveTargetId = ref('')
     const batchUpdateVisible = ref(false)
+    const moreMenuVisible = ref(false)
 
     function onOpenQuickUpdate(e) {
       const id = e.detail
@@ -168,6 +170,39 @@ export const AppShell = {
           ]),
         ]),
       ]) : null,
+
+      // Mobile top header
+      state.isMobile ? h('header', { class: 'mobile-header' }, [
+        h('div', { class: 'mobile-header-left' }, [
+          h('span', { class: 'mobile-header-title' }, '管理脉搏'),
+          h('span', { class: ['sync-dot', syncDotClass()], style: { marginLeft: '8px' } }),
+        ]),
+        h('button', {
+          class: 'mobile-header-more',
+          onClick: () => { moreMenuVisible.value = true },
+        }, '⋯'),
+      ]) : null,
+
+      // Mobile more menu (bottom sheet)
+      h(BottomSheet, {
+        visible: moreMenuVisible.value,
+        onClose: () => { moreMenuVisible.value = false },
+      }, {
+        default: () => [
+          h('div', { class: 'more-menu' },
+            moreItems.map(item =>
+              h('button', {
+                key: item.name,
+                class: ['more-menu-item', { active: isActive(item.path) }],
+                onClick: () => { moreMenuVisible.value = false; navigate(item.path) },
+              }, [
+                h('span', { class: 'more-menu-icon' }, item.icon),
+                h('span', null, item.label),
+              ])
+            )
+          ),
+        ],
+      }),
 
       // Main content with router-view
       h('main', { class: 'main-content' }, [
