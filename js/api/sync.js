@@ -1,4 +1,4 @@
-import { state, persistStreams, persistSyncMeta, recalculateStatusLights } from '../store/state.js'
+import { state, persistStreams, persistSyncMeta, persistSettings, recalculateStatusLights } from '../store/state.js'
 import { fetchDataFile, writeDataFile } from './github.js'
 import { showToast } from '../store/actions.js'
 import { getJSON, setJSON, STORAGE_KEYS } from '../services/storage.js'
@@ -40,6 +40,21 @@ export async function pullFromGitHub() {
     recalculateStatusLights()
     persistStreams()
 
+    // Restore non-sensitive settings from remote (never overwrite API keys/tokens)
+    if (content.settings) {
+      if (content.settings.ai) {
+        state.settings.ai.model = content.settings.ai.model || state.settings.ai.model
+        state.settings.ai.workerUrl = content.settings.ai.workerUrl || state.settings.ai.workerUrl
+      }
+      if (content.settings.thresholds) {
+        state.settings.thresholds = { ...state.settings.thresholds, ...content.settings.thresholds }
+      }
+      if (content.settings.roleNames) {
+        state.settings.roleNames = { ...state.settings.roleNames, ...content.settings.roleNames }
+      }
+      persistSettings()
+    }
+
     state.syncMeta.remoteSha = sha
     state.syncMeta.lastSyncTime = today()
     state.syncMeta.syncStatus = 'idle'
@@ -72,6 +87,12 @@ export async function pushToGitHub() {
 
     const data = {
       workStreams: state.workStreams,
+      settings: {
+        ai: { model: state.settings.ai.model, workerUrl: state.settings.ai.workerUrl },
+        thresholds: state.settings.thresholds,
+        roleNames: state.settings.roleNames,
+        github: { owner: state.settings.github.owner, repo: state.settings.github.repo, path: state.settings.github.path, branch: state.settings.github.branch },
+      },
       exportedAt: new Date().toISOString(),
     }
 
@@ -94,7 +115,16 @@ export async function pushToGitHub() {
       try {
         await pullFromGitHub()
         // Retry push after merge
-        const data = { workStreams: state.workStreams, exportedAt: new Date().toISOString() }
+        const data = {
+          workStreams: state.workStreams,
+          settings: {
+            ai: { model: state.settings.ai.model, workerUrl: state.settings.ai.workerUrl },
+            thresholds: state.settings.thresholds,
+            roleNames: state.settings.roleNames,
+            github: { owner: state.settings.github.owner, repo: state.settings.github.repo, path: state.settings.github.path, branch: state.settings.github.branch },
+          },
+          exportedAt: new Date().toISOString(),
+        }
         const remote = await fetchDataFile(state.settings.github)
         const result = await writeDataFile(state.settings.github, data, remote.sha, `Update ${today()} (merged)`)
         state.syncMeta.remoteSha = result.sha

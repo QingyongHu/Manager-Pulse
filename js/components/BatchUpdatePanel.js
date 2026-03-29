@@ -1,5 +1,5 @@
 import { h, ref, computed } from 'vue'
-import { state } from '../store/state.js'
+import { state, ROLES } from '../store/state.js'
 import { batchUpdate, showToast } from '../store/actions.js'
 import { parseWorkUpdates } from '../api/zhipu.js'
 import { matchAllAiResults } from '../utils/fuzzyMatch.js'
@@ -42,9 +42,20 @@ export const BatchUpdatePanel = {
       parseError.value = ''
 
       try {
-        const streamNames = state.workStreams.filter(ws => !ws.archived).map(ws => ws.name)
-        const aiResults = await parseWorkUpdates(rawInput.value, streamNames, state.settings.ai)
-        parsedResults.value = matchAllAiResults(aiResults, state.workStreams.filter(ws => !ws.archived))
+        // Build rich context with role info for better AI matching
+        const activeStreams = state.workStreams.filter(ws => !ws.archived)
+        const streamContext = activeStreams.map(ws => {
+          const role = ROLES[ws.role]
+          return {
+            id: ws.id,
+            name: ws.name,
+            role: ws.role,
+            roleName: state.settings.roleNames[ws.role] || (role ? role.name : ws.role),
+            roleIcon: role ? role.icon : '',
+          }
+        })
+        const aiResults = await parseWorkUpdates(rawInput.value, streamContext, state.settings.ai)
+        parsedResults.value = matchAllAiResults(aiResults, activeStreams)
 
         if (parsedResults.value.length === 0) {
           parseError.value = '未能识别任何工作线更新，请修改描述后重试'

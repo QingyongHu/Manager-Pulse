@@ -30,18 +30,47 @@ const TOOL_DEFINITION = {
   },
 }
 
-export async function parseWorkUpdates(rawText, existingStreamNames, aiConfig) {
+export async function parseWorkUpdates(rawText, workStreamContext, aiConfig) {
   const { apiKey, model, workerUrl } = aiConfig
 
   if (!apiKey) throw new Error('未配置 AI API Key')
   if (!workerUrl) throw new Error('未配置 AI Worker URL')
 
+  // Build role-grouped context for better fuzzy matching
+  let contextList = ''
+  if (Array.isArray(workStreamContext) && workStreamContext.length > 0 && typeof workStreamContext[0] === 'object') {
+    // Rich context with role info
+    const byRole = {}
+    for (const ws of workStreamContext) {
+      const roleLabel = `${ws.roleIcon} ${ws.roleName}`
+      if (!byRole[roleLabel]) byRole[roleLabel] = []
+      byRole[roleLabel].push(ws.name)
+    }
+    contextList = Object.entries(byRole)
+      .map(([role, names]) => `${role}:\n${names.map(n => `  - ${n}`).join('\n')}`)
+      .join('\n')
+  } else {
+    // Fallback: plain name list
+    const names = Array.isArray(workStreamContext) ? workStreamContext : []
+    contextList = names.map((name, i) => `${i + 1}. ${name}`).join('\n')
+  }
+
   const systemPrompt = `你是一个工作线进度更新解析器。用户会输入一段话描述今天的工作进展，你需要识别出每条被提及的工作线，并提取对应的状态更新。
 
-当前系统中的工作线列表如下：
-${existingStreamNames.map((name, i) => `${i + 1}. ${name}`).join('\n')}
+当前系统中的工作线按角色分组如下：
+${contextList}
 
-请尽量将用户提到的名称匹配到上述列表中的工作线。如果用户使用了简称或别名，也要尝试匹配。`
+匹配规则（非常重要）：
+1. 用户可能是语音输入，会有同音字、口误、口语化表达。请根据上下文语义推断真实意图。
+2. 用户经常使用简称或上下文暗示，而非完整名称。例如：
+   - "创业里面要把论文投出去" → 匹配"知识产权（论文/专利）"（属于创业Leader）
+   - "孙启尧那边" → 匹配"孙启尧（博士）"
+   - "装修" → 匹配"新房交付与装修"
+   - "国自科" → 可能匹配"国自科·青基"、"国自科·面上"、"国自科·35岁青A"中的一个或多个
+   - "学生" → 根据上下文匹配具体的博士姓名
+3. 如果用户提到了角色（如"创业"、"项目"、"家庭"），优先在该角色下寻找匹配。
+4. 如果一条更新涉及多个工作线（如"国自科青基和面上都在准备"），请拆分为多条。
+5. 即使只提到关键词而非完整名称，也要尝试匹配，并在status中如实记录用户描述的内容。`
 
   const body = {
     model: model || 'glm-4-flash',

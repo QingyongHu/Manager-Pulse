@@ -8,16 +8,16 @@ export function fuzzyMatch(input, targets) {
 
   for (const target of targets) {
     const normalizedTarget = target.toLowerCase()
+    const cleanedTarget = normalizedTarget.replace(/[（）()·\s]/g, '')
 
     // Exact match
-    if (normalizedInput === normalizedTarget) {
+    if (normalizedInput === normalizedTarget || normalizedInput === cleanedTarget) {
       return { match: target, score: 1.0 }
     }
 
-    // Contains match
-    const cleanedTarget = normalizedTarget.replace(/[（）()·\s]/g, '')
-    if (normalizedTarget.includes(normalizedInput) || normalizedInput.includes(cleanedTarget)) {
-      const score = Math.min(normalizedInput.length, normalizedTarget.length) / Math.max(normalizedInput.length, normalizedTarget.length)
+    // Contains match (input contains target or vice versa)
+    if (cleanedTarget.includes(normalizedInput) || normalizedInput.includes(cleanedTarget)) {
+      const score = 0.9 + 0.1 * Math.min(normalizedInput.length, normalizedTarget.length) / Math.max(normalizedInput.length, normalizedTarget.length)
       if (score > bestScore) {
         bestScore = score
         bestMatch = target
@@ -25,7 +25,26 @@ export function fuzzyMatch(input, targets) {
       continue
     }
 
-    // Character overlap score
+    // Keyword extraction: split on common delimiters and match keywords
+    const inputKeywords = normalizedInput.split(/[,，、\s]+/).filter(k => k.length > 0)
+    const targetParts = cleanedTarget.split(/[·\-—/]/).filter(k => k.length > 0)
+
+    let keywordHits = 0
+    for (const kw of inputKeywords) {
+      if (targetParts.some(part => part.includes(kw) || kw.includes(part))) {
+        keywordHits++
+      }
+    }
+    if (keywordHits > 0) {
+      const score = 0.6 + 0.3 * (keywordHits / Math.max(inputKeywords.length, targetParts.length))
+      if (score > bestScore) {
+        bestScore = score
+        bestMatch = target
+      }
+      continue
+    }
+
+    // Character overlap score (fallback)
     let matchCount = 0
     const inputChars = [...new Set(normalizedInput)]
     for (const ch of inputChars) {
@@ -49,8 +68,8 @@ export function matchAllAiResults(aiResults, workStreams) {
     const matchedStream = match ? workStreams.find(ws => ws.name === match) : null
 
     let confidence = 'low'
-    if (score >= 0.8) confidence = 'high'
-    else if (score >= 0.5) confidence = 'medium'
+    if (score >= 0.7) confidence = 'high'
+    else if (score >= 0.4) confidence = 'medium'
 
     return {
       ...result,
